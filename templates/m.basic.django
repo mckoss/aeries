@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html> 
+<head>
+    <title>{% if pagetitle %}{{pagetitle}}{% else %}PagesLike{% endif %}</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="application-name" content="{{sitewordname}}">
+    <meta name="copyright" content="Copyright 2009 by {{sitewordname}}">
+    <meta name="description" content="{{sitename}}">
+    <meta name="keywords" content="{{sitekeywords}}">
+
+    {# <link rel="alternate" type="application/rss+xml" title="{{sitename}} - RSS" href="/feed.xml" /> #}
+    <link rel="shortcut icon" href="/icon.ico" type="image/x-icon">
+    <link rel="icon" href="/icon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/icon32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/images/iphoneicon.png"/>
+
+    <link rel="stylesheet" type="text/css" href="/styles/main.css">
+</head>
+<body>
+<div style="width:800px; margin: 0 auto">
+
+<img src="/images/pageslike_logo.gif">
+
+{% block body %}{% endblock body %}
+
+{% block footer %}
+<p>
+	<font size="-2" color="#666666"><strong>PagesLike.com</strong>
+	Copyright &copy; 2009 by PagesLike, all rights reserved |
+	<a href="/about">About us</a> |
+	<a href="http://blog.pageslike.com">Blog</a> |
+	<a href="mailto:help@pageslike.com">Contact us</a></font>
+</p>
+{% endblock %}
+
+</div>
+{{ analytics }}
+</body>
+</html>

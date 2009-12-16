@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>This is a sample Title</title>
+<meta name="description" content="Sample description of the page.">
+<meta name="keywords" content="meta-key-one, meta key two">
+<script src="/widget.js"></script>
+<body>
+<h1>Sample PagesLike Page</h1>
+<div>
+	<h3 class="post-title"><a href="http://blog.pageslike.com/post1">This is the post 1 title</a></h3>
+	<div><a rel="bookmark" href="http://blog.pageslike.com/post1">time</a></div>
+	<div>
+		<a rel="tag" href="http://blog.pageslike.com/search/label/tag1">tag1</a>,
+		<a rel="tag" href="http://blog.pageslike.com/search/label/mtag"> multiword tag  </a>,
+		<a rel="tag" href="http://blog.pageslike.com/search/label/tag1"> tag1 </a>
+	</div>
+</div>
+
+<div>
+	<h3 class="post-title"><a href="http://blog.pageslike.com/post2">This is the post 2 title</a></h3>
+	<div><a rel="bookmark" href="http://blog.pageslike.com/post2">time</a></div>
+	<div>
+		<a rel="tag" href="http://blog.pageslike.com/search/label/tag1">tag1</a>,
+		<a rel="tag" href="http://blog.pageslike.com/search/label/tag2"> tag2  </a>,
+		<a rel="tag" href="http://blog.pageslike.com/search/label/tag3"> tag3 </a>
+	</div>
+</div>
+
+<script>
+PL = global_namespace.Import('pageslike.widget');
+</script>
+<h2>160 Pixel Div</h2>
+<div style="width:160px;">
+	<script>PL.InsertWidget();</script>
+</div>
+
+<h2>218 Pixel Div</h2>
+<div style="width:218px;">
+	<script>PL.InsertWidget();</script>
+</div>
+
+<h2>464 Pixel Div</h2>
+<div style="width:464px;">
+	<script>PL.InsertWidget();</script>
+</div>
+
+<p>
+<a href="/tag?tags=foo,bar">JSON Tag Page</a>
+</p>
+</body>
+</html>

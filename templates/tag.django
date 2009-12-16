@@ -1,0 +1,7 @@
+{% extends "master.html" %}
+{% block body %}
+<h2>Popular pages for tag, {{tag}}</h2>
+
+<p>We'll write this when we have time.</p>
+
+{% endblock body %}

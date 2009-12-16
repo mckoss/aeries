@@ -1,0 +1,57 @@
+{% extends "pages.html" %}
+{% block pagebody %}
+<h2>What is PagesLike?</h2>
+
+<p>
+	PagesLike is a new way to get exposure for your site across a community of web sites
+	that share a common readership.  You can attract more readers to your site, and help
+	your readers find relevant related content by joining a community of other web sites
+	like yours.
+</p>
+<p>
+	For example, <a href="http://techflash.com/">TechFlash</a> is the anchor site for startup
+	and technology news from the Seattle area.  But there are many smaller company blogs and
+	vertical new sites in our community.
+	All of these sites can easily cross-promote between each other by joining the
+	<a href="/community/seattle-tech">Seattle Technology</a> PagesLike community.
+</p>
+<h2>How does it work?</h2>
+<div style="width:250px;float:right;padding-left:15px;">
+<script>global_namespace.Import('pageslike.widget').InsertWidget({community:'general'})</script>
+</div
+<p>
+	Join one of our <a href="/communities">community sites</a>
+	to find the most appropriate group for you.
+</p>
+<p>
+	Once you embed the PagesLike widget, your readers will be able to see the most popular
+	related stories from other web sites in that community.  Once your site has been approved
+	by your community manager, links to your site will also appear on other web sites in the
+	community.	
+</p>
+<p>
+	There is no additional work for you to do to submit articles to PagesLike.  We automatically
+	recognize new stories from your site whenever the widget is displayed there.  We then
+	compare the content and keywords that your story uses, and propose to your readers the most
+	popular recent articles from other sites in your community.
+	
+	Once your site has been approved to submit content in your community, your site will also be
+	recommended to readers on other sites, when they are looking at articles that are similar
+	to ones on your site.
+</p>
+<h2>Try it Now!</h2>
+<p>
+	<strong>Step 1:</strong> Embed our code snippet in your web page (usually in a side-bar
+	navigation area):
+	<blockquote><code style="font-size:12px;">
+			&lt;script src="http://www.pageslike.com/widget.js">&lt;/script>
+			<br/>&lt;script>
+			<br/>&nbsp;&nbsp;global_namespace.Import('pageslike.widget').InsertWidget({community:'general'});
+			<br/>&lt;/script>
+	</code></blockquote>
+</p>
+</p>
+<p>
+	<strong>Step 2:</strong> There is no Step 2 - that's all there is to it!
+</p>
+{% endblock pagebody %}

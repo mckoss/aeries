@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>PagesLike Unit Tests</title>
+<meta name="description" content="This is the meta description for this page">
+<meta name="keywords" content="keyword1, keyword2, multi word keyword">
+<script src="unit.js"></script>
+<script src="/widget.js"></script>
+</head>
+<body onload="ts.Run();ts.Report();">
+<h1><script>document.write(document.title);</script></h1>
+
+<div style="border: 1px solid black;margin:10px;width:350px;">
+<h2>Sample DOM:</h2>
+
+	<div>
+		<div id='d1'>Blah</div>
+		<div>
+			<div id='d2'>Blah</div>
+		</div>
+	</div>
+	<div>
+		<div id='d3'>Blah</div>
+		<div>
+			<div id='d4'>Blah</div>
+		</div>
+	</div>
+</div>
+
+<div id="blogger" style="border: 1px solid black;margin:10px;width:350px;">
+	<h1>Blogger-like HTML</h1>
+	<div id="post1">
+		<h3 class="post-title"><a href="http://blog.pageslike.com/post1">This is the post 1 title</a></h3>
+		<div><a rel="bookmark" href="http://blog.pageslike.com/post1">time</a></div>
+		<div>
+			<a rel="tag" href="http://blog.pageslike.com/search/label/tag1">tag1</a>,
+			<a rel="tag" href="http://blog.pageslike.com/search/label/mtag"> multiword tag  </a>,
+			<a rel="tag" href="http://blog.pageslike.com/search/label/tag1"> tag1 </a>
+		</div>
+	</div>
+	
+	<div id="post2">
+		<h3 class="post-title"><a href="http://blog.pageslike.com/post2">This is the post 2 title</a></h3>
+		<div><a rel="bookmark" href="http://blog.pageslike.com/post2">time</a></div>
+		<div>
+			<a rel="tag" href="http://blog.pageslike.com/search/label/tag1">tag1</a>,
+			<a rel="tag" href="http://blog.pageslike.com/search/label/tag2"> tag2  </a>,
+			<a rel="tag" href="http://blog.pageslike.com/search/label/tag3"> tag3 </a>
+		</div>
+	</div>
+</div>
+
+<div id="wordpress" style="border: 1px solid black;margin:10px;width:350px;">
+	<div><h2>Wordpress-like HTML</h2></div>
+	<div><div>
+		<h2><a href="http://blog.pageslike.com/post1WP">This is the post 1 title for WP</a></h2>
+		<div>
+			Posted by Foo Bar
+			<a rel="category tag" href="http://pageslike.com/category/tag1/">tag1</a>,
+			<a rel="category tag" href="http://pageslike.com/category/tag2/">tag2</a>
+		</div>
+		<div>Content</div>
+		<div>Feedback</div>
+		
+		<h2><a href="http://blog.pageslike.com/post2WP">This is the post 2 title for WP</a></h2>
+		<div>
+			Posted by Foo Bar
+			<a rel="category tag" href="http://pageslike.com/category/tag3/">tag3</a>,
+			<a rel="category tag" href="http://pageslike.com/category/tag2/">tag2</a>
+		</div>
+		<div>Content</div>
+		<div>Feedback</div>
+	</div></div>
+	
+</div>
+
+<script>
+var PL = global_namespace.Import('pageslike.widget');
+var DOM = PL.Import('startpad.DOM');
+var Data = PL.Import('startpad.data');
+
+var widgetGeneral = PL.InsertWidget({defer_load:true});
+var widgetTech = PL.InsertWidget({defer_load:true, community: 'seattle-tech'});
+
+var ts = new UT.TestSuite();
+ts.DWOutputDiv();
+
+function AssertLinks(ut, links)
+{
+	try
+		{
+		ut.AssertType(links, 'array');
+		ut.AssertGT(links.length, 0);
+		for (var i = 0; i < links.length; i++)
+			ut.AssertTypes(links[i], {url:'string', title:'string', score:'number'});
+		}
+	catch (e) {}
+}
+
+ts.AddTest("DOM Functions", function(ut)
+{
+	var e1 = document.getElementById('d1');
+	var e2 = document.getElementById('d2');
+	var e3 = document.getElementById('d3');
+
+	ut.AssertEq(DOM.Ancestors(e1).length, 5);
+	ut.AssertEq(DOM.Ancestors(e2).length, 6);
+	
+	ut.AssertEq(DOM.CommonAncestorHeight(e2, e1), 2);
+	
+	ut.AssertEq(PL.ClosestAncestor(e2, [e1, e3]), 0);
+	ut.AssertEq(PL.ClosestAncestor(e2, [e3, e1]), 1);
+});
+
+ts.AddTest("Scan DOM", function(ut)
+{
+	var elemWP = document.getElementById('wordpress');
+	var iTag = 0;
+	var aTags = ['DIV', 'DIV', 'H2', 'DIV', 'DIV',
+	         	 'H2', 'A', 'DIV', 'A', 'A', 'DIV', 'DIV',
+	         	'H2', 'A', 'DIV', 'A', 'A', 'DIV', 'DIV'];
+ 
+	PL.ScanDOM(elemWP, function(elem, iDepth) {
+		ut.AssertEq(elem.tagName, aTags[iTag++]);
+	});
+});
+
+ts.AddTest("Page Scanner", function(ut)
+{
+	var elemBlogger = document.getElementById('blogger');
+	var aInfo = PL.ScanPage(elemBlogger);
+	ut.AssertEq(aInfo.length, 2);
+	ut.AssertContains(aInfo[0], {title:"This is the post 1 title",
+		url:"http://blog.pageslike.com/post1"});
+	ut.AssertEq(aInfo[0].tags, ['tag1', 'multiword-tag']);
+	
+	var elemWP = document.getElementById('wordpress');
+	var aInfo = PL.ScanPage(elemWP);
+	ut.AssertEq(aInfo.length, 2);
+	ut.AssertContains(aInfo[0], {title:"This is the post 1 title for WP",
+		url:"http://blog.pageslike.com/post1WP"});
+	ut.AssertEq(aInfo[0].tags, ['tag1', 'tag2']);
+});
+
+ts.AddTest("JSON API and AJAX", function(ut)
+{
+	var sid;
+
+	ut.AsyncSequence([
+		function (ut)
+			{
+			ut.AssertEq(Data.apikey, undefined);
+			ut.AssertEq(Data.sid, undefined);
+			Data.GetAPIKey(PL.sDomain, function () {
+				ut.AssertType(Data.apikey, 'string');
+				ut.AssertType(Data.sid, 'string');
+				ut.NextFn();
+			});
+			},
+		function (ut)
+			{
+	    	new Data.ScriptData("/loopback-test.json").Call({data:{s:"Hello"}}, function(obj) {
+		    	ut.AssertContains(obj, {status:'OK', s:"Hello"});
+		    	ut.NextFn();
+	    		});
+			},
+		function (ut)
+			{
+	    	new Data.ScriptData("/loopback-test.json").Call({data:{m:{a:1, b:2, c:3}}}, function(obj) {
+		    	ut.AssertContains(obj, {status:'OK'});
+		    	ut.AssertType(obj.m, 'object');
+		    	ut.AssertContains(obj.m, {a:1, b:2, c:3});
+		    	ut.NextFn();
+	    		});
+			},
+		function (ut)
+			{
+	    	new Data.PostData("/loopback-test.json").Call({data:{m:{a:1, b:2, c:3}}}, function(obj) {
+		    	ut.AssertContains(obj, {status:'OK'});
+		    	ut.NextFn();
+	    		});
+			}
+	]);
+}).Async(true);
+
+ts.AddTest("Tag", function(ut)
+{
+	var aInfo = [{url:'http://sample.com',tags:['tag1','tag2']}];
+	
+	ut.AsyncSequence([
+	    function (ut)
+	    	{
+	    	new Data.ScriptData("/init.json").Call({}, function(obj) {
+		    	ut.AssertContains(obj, {status:'OK'});
+		    	ut.NextFn();
+	    		});
+	    	},
+   		function (ut)
+			{
+			new Data.ScriptData("/scan.json").Call({}, function(obj) {
+				ut.AssertContains(obj, {status:"Fail/Links"});
+				ut.NextFn();
+				});
+			},
+		function (ut)
+			{
+			new Data.ScriptData("/scan.json").Call({links:aInfo}, function(obj) {
+				ut.AssertTypes(obj, {links:'array', tags: 'array'});
+				AssertLinks(ut, obj.links);
+				ut.NextFn();
+				});
+			},
+		function (ut)
+			{
+			new Data.ScriptData("/scan.json").Call({links:aInfo, community:'seattle-tech'}, function(obj) {
+				ut.AssertTypes(obj, {links:'array', tags: 'array'});
+				AssertLinks(ut, obj.links);
+				ut.NextFn();
+				});
+			}
+			
+		]);
+}).Async(true);
+
+ts.AddTest("Widget", function(ut)
+{
+	ut.AsyncSequence([
+		function (ut)
+			{
+			ut.AssertNEq(PL.GetWidget(0).div, undefined);
+			ut.AssertNEq(PL.GetWidget(1).div, undefined);
+			ut.NextFn();
+			},
+		function (ut)
+			{
+			console.log("blogger");
+			var div = document.getElementById("blogger");
+			widgetGeneral.Fill(null, div, function(obj)
+				{
+				ut.AssertTypes(obj, {links:'array', tags: 'array'});
+				AssertLinks(ut, obj.links);
+				ut.NextFn();
+				});
+			},
+		function (ut)
+			{
+			console.log("wordpress");
+			var div = document.getElementById("wordpress");
+			widgetTech.Fill(null, div, function(obj)
+				{
+				ut.AssertTypes(obj, {links:'array', tags: 'array'});
+				AssertLinks(ut, obj.links);
+				ut.NextFn();
+				});
+			}		
+	]);
+}).Async(true);
+
+// Assumes Widget test above populates NS.aScans
+ts.AddTest("Widget Community", function(ut)
+{
+	ut.AsyncSequence([
+		function (ut)
+			{
+			for (i = 0; i < 2; i++)
+				{
+				var widget = PL.GetWidget(i);
+				console.log(widget.div.id, widget.scan.links);
+				}
+			ut.NextFn();
+			}
+	]);
+}).Async(true);
+
+</script>
+</body>
